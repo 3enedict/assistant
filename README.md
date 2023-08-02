@@ -1,16 +1,3 @@
-# assistant
+# Assistant
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This is a really tiny project that loads any webpage you want. In this case though, the idea of the app was to quickly solve the rather niche issue of connecting to Home Assistant without using their app. As such, it hasn't been designed with user friendliness as a main goal...
