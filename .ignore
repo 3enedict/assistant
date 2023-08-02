@@ -1,0 +1,10 @@
+android/
+linux/
+windows/
+web/
+ios/
+macos/
+build/
+pubspec.lock
+analysis_options.yaml
+assistant.iml
