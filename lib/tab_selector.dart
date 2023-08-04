@@ -3,22 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:owl/gradient_button.dart';
 import 'package:owl/gradients.dart';
 import 'package:owl/item.dart';
+import 'package:owl/url_model.dart';
+import 'package:provider/provider.dart';
 
-class TabSelector extends StatefulWidget {
-  final List<String> urls;
-  const TabSelector({super.key, required this.urls});
-
-  @override
-  TabSelectorState createState() => TabSelectorState();
-}
-
-class TabSelectorState extends State<TabSelector> {
-  final List<String>? _urls = null;
+class TabSelector extends StatelessWidget {
+  const TabSelector({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final urls = _urls ?? widget.urls;
-
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -46,13 +38,17 @@ class TabSelectorState extends State<TabSelector> {
                           0,
                           MediaQuery.of(context).size.height - 70,
                         ),
-                        sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              return Item(name: urls[index]);
-                            },
-                            childCount: urls.length,
-                          ),
+                        sliver: Consumer<UrlModel>(
+                          builder: (context, urls, child) {
+                            return SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int index) {
+                                  return Item(name: urls.url(index), id: index);
+                                },
+                                childCount: urls.number,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],

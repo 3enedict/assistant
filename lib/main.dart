@@ -1,21 +1,28 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:provider/provider.dart';
 
 import 'package:owl/tab_selector.dart';
+import 'package:owl/url_model.dart';
 
 const defaultUrl = "http://192.168.1.2:8123";
 
 void main() {
+  Paint.enableDithering = true;
+
   runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Owl',
-      theme: ThemeData.dark(useMaterial3: true),
-      home: const Owl(),
+    ChangeNotifierProvider(
+      create: (context) => UrlModel(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Owl',
+        theme: ThemeData.dark(useMaterial3: true),
+        home: const Owl(),
+      ),
     ),
   );
 }
@@ -29,7 +36,7 @@ class Owl extends StatefulWidget {
 
 class OwlState extends State<Owl> {
   late final WebViewController controller;
-  final List<String> _urls = [defaultUrl];
+  bool _loaded = false;
 
   @override
   void initState() {
@@ -37,43 +44,46 @@ class OwlState extends State<Owl> {
 
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted);
-
-    SharedPreferences.getInstance().then(
-      (instance) {
-        setState(() {
-          var url = instance.getString("url");
-          controller.loadRequest(Uri.parse(url ?? defaultUrl));
-        });
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_loaded) {
+      var model = Provider.of<UrlModel>(context, listen: false);
+      model.load().then((x) => setState(() => _loaded = true));
+      return Container();
+    }
+
     return Scaffold(
       body: SafeArea(
-        child: WebViewWidget(
-          controller: controller,
-          gestureRecognizers: {
-            Factory<VerticalDragGestureRecognizer>(
-              () => VerticalDragGestureRecognizer()
-                ..onDown = (DragDownDetails dragDownDetails) {
-                  controller.getScrollPosition().then(
-                    (value) {
-                      var movement = dragDownDetails.globalPosition;
-                      if (value.dy == 0 && movement.direction < 1) {
-                        Navigator.push(
-                          context,
-                          SlideRightRoute(
-                            page: TabSelector(urls: _urls),
-                          ),
-                        );
-                      }
-                    },
-                  );
-                },
-            ),
+        child: Consumer<UrlModel>(
+          builder: (context, urls, child) {
+            String url = urls.url(urls.enabled);
+            if (url != "") controller.loadRequest(Uri.parse(url));
+
+            return child ?? Container();
           },
+          child: WebViewWidget(
+            controller: controller,
+            gestureRecognizers: {
+              Factory<VerticalDragGestureRecognizer>(
+                () => VerticalDragGestureRecognizer()
+                  ..onDown = (DragDownDetails dragDownDetails) {
+                    controller.getScrollPosition().then(
+                      (value) {
+                        var movement = dragDownDetails.globalPosition;
+                        if (value.dy == 0 && movement.direction < 1) {
+                          Navigator.push(
+                            context,
+                            SlideRightRoute(page: const TabSelector()),
+                          );
+                        }
+                      },
+                    );
+                  },
+              ),
+            },
+          ),
         ),
       ),
     );
