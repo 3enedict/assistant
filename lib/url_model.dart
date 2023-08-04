@@ -17,8 +17,6 @@ class UrlModel extends ChangeNotifier {
     _urls[index] = url;
     _enabled = index;
 
-    print(_urls);
-
     SharedPreferences.getInstance().then(
       (instance) => instance.setStringList("urls", _urls),
     );
@@ -26,9 +24,8 @@ class UrlModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String url(int index) => _urls.elementAtOrNull(index) ?? "";
-
+  List<String> get list => List.from(_urls);
+  String get current => _urls.elementAtOrNull(_enabled) ?? "";
   int get enabled => _enabled;
-
   int get number => _urls.length;
 }

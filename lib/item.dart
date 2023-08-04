@@ -17,13 +17,13 @@ class Item extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(35),
+          borderRadius: BorderRadius.circular(33),
           gradient: LinearGradient(colors: toSurfaceGradient(owlGradient)),
         ),
-        height: 70,
+        height: 66,
         child: Consumer<UrlModel>(
           builder: (context, urls, child) {
             return Row(

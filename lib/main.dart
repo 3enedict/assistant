@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:provider/provider.dart';
@@ -58,8 +57,10 @@ class OwlState extends State<Owl> {
       body: SafeArea(
         child: Consumer<UrlModel>(
           builder: (context, urls, child) {
-            String url = urls.url(urls.enabled);
-            if (url != "") controller.loadRequest(Uri.parse(url));
+            String url = urls.current;
+            if (url != "" && Uri.tryParse(url) != null) {
+              controller.loadRequest(Uri.parse(url));
+            }
 
             return child ?? Container();
           },
@@ -72,7 +73,9 @@ class OwlState extends State<Owl> {
                     controller.getScrollPosition().then(
                       (value) {
                         var movement = dragDownDetails.globalPosition;
-                        if (value.dy == 0 && movement.direction < 1) {
+                        if (value.dy == 0 &&
+                            movement.direction < 1 &&
+                            movement.dy > 100) {
                           Navigator.push(
                             context,
                             SlideRightRoute(page: const TabSelector()),
