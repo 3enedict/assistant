@@ -1,15 +1,17 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-const defaultUrl = "https://www.google.com";
+const defaultUrl = "http://192.168.1.2:8123";
 
 void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Assistant',
+      title: 'Owl',
       theme: ThemeData.dark(useMaterial3: true),
       home: const Assistant(),
     ),
@@ -25,6 +27,7 @@ class Assistant extends StatefulWidget {
 
 class AssistantState extends State<Assistant> {
   late final WebViewController controller;
+  final List<String> _urls = [];
 
   @override
   void initState() {
@@ -35,8 +38,10 @@ class AssistantState extends State<Assistant> {
 
     SharedPreferences.getInstance().then(
       (instance) {
-        final url = instance.getString("url");
-        controller.loadRequest(Uri.parse(url ?? defaultUrl));
+        setState(() {
+          var url = instance.getString("url");
+          controller.loadRequest(Uri.parse(url ?? defaultUrl));
+        });
       },
     );
   }
@@ -44,49 +49,69 @@ class AssistantState extends State<Assistant> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context)
-            .push(
-          MaterialPageRoute(
-            builder: (context) => const SelectionScreen(),
-          ),
-        )
-            .then(
-          (newUrl) {
-            setState(() => controller.loadRequest(Uri.parse(newUrl)));
-            SharedPreferences.getInstance().then(
-              (instance) => instance.setString("url", newUrl),
-            );
+      body: SafeArea(
+        child: WebViewWidget(
+          controller: controller,
+          gestureRecognizers: {
+            Factory<VerticalDragGestureRecognizer>(
+              () => VerticalDragGestureRecognizer()
+                ..onDown = (DragDownDetails dragDownDetails) {
+                  controller.getScrollPosition().then(
+                    (value) {
+                      var movement = dragDownDetails.globalPosition;
+                      if (value.dy == 0 &&
+                          movement.direction < 1 &&
+                          movement.distance > 1) {
+                        Navigator.push(
+                          context,
+                          SlideRightRoute(page: const TabSelector()),
+                        );
+                      }
+                    },
+                  );
+                },
+            ),
           },
         ),
-        child: const Icon(Icons.link),
       ),
-      body: WebViewWidget(controller: controller),
     );
   }
 }
 
-class SelectionScreen extends StatelessWidget {
-  const SelectionScreen({super.key});
-
+class TabSelector extends StatelessWidget {
+  const TabSelector({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: TextField(
-            autofocus: true,
-            keyboardType: TextInputType.url,
-            decoration: const InputDecoration(
-              hintText: "https://www.google.com",
-              border: InputBorder.none,
-            ),
-            expands: false,
-            onSubmitted: (url) => Navigator.of(context).pop(url),
-          ),
-        ),
+      body: SafeArea(
+        child: Container(),
       ),
     );
   }
+}
+
+class SlideRightRoute extends PageRouteBuilder {
+  final Widget page;
+  SlideRightRoute({required this.page})
+      : super(
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, -1),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        );
 }
