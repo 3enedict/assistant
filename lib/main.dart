@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import 'package:owl/tab_selector.dart';
+
 const defaultUrl = "http://192.168.1.2:8123";
 
 void main() {
@@ -13,21 +15,21 @@ void main() {
       debugShowCheckedModeBanner: false,
       title: 'Owl',
       theme: ThemeData.dark(useMaterial3: true),
-      home: const Assistant(),
+      home: const Owl(),
     ),
   );
 }
 
-class Assistant extends StatefulWidget {
-  const Assistant({super.key});
+class Owl extends StatefulWidget {
+  const Owl({super.key});
 
   @override
-  AssistantState createState() => AssistantState();
+  OwlState createState() => OwlState();
 }
 
-class AssistantState extends State<Assistant> {
+class OwlState extends State<Owl> {
   late final WebViewController controller;
-  final List<String> _urls = [];
+  final List<String> _urls = [defaultUrl];
 
   @override
   void initState() {
@@ -59,12 +61,12 @@ class AssistantState extends State<Assistant> {
                   controller.getScrollPosition().then(
                     (value) {
                       var movement = dragDownDetails.globalPosition;
-                      if (value.dy == 0 &&
-                          movement.direction < 1 &&
-                          movement.distance > 1) {
+                      if (value.dy == 0 && movement.direction < 1) {
                         Navigator.push(
                           context,
-                          SlideRightRoute(page: const TabSelector()),
+                          SlideRightRoute(
+                            page: TabSelector(urls: _urls),
+                          ),
                         );
                       }
                     },
@@ -76,42 +78,4 @@ class AssistantState extends State<Assistant> {
       ),
     );
   }
-}
-
-class TabSelector extends StatelessWidget {
-  const TabSelector({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(),
-      ),
-    );
-  }
-}
-
-class SlideRightRoute extends PageRouteBuilder {
-  final Widget page;
-  SlideRightRoute({required this.page})
-      : super(
-          pageBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) =>
-              page,
-          transitionsBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) =>
-              SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, -1),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          ),
-        );
 }
