@@ -43,9 +43,13 @@ class CustomTextfield extends StatelessWidget {
       Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(13),
-          gradient: const LinearGradient(colors: owlGradient),
+          gradient: LinearGradient(
+            colors: id == Provider.of<UrlModel>(context, listen: false).enabled
+                ? owlGradient
+                : toBackgroundGradientWithReducedColorChange(owlGradient),
+          ),
         ),
-        margin: const EdgeInsets.fromLTRB(20, 0, 12, 0),
+        margin: const EdgeInsets.fromLTRB(20, 0, 14, 0),
         height: 26,
         width: 26,
       ),

@@ -24,10 +24,24 @@ class UrlModel extends ChangeNotifier {
   }
 
   void set(int index, String url) {
+    setInternal(index, url);
+    notify();
+  }
+
+  void remove(int index) {
+    _urls.removeAt(index);
+    _enabled = 0;
+
+    notify();
+  }
+
+  void setInternal(int index, String url) {
     if (index > _urls.length - 1) _urls.add("");
     _urls[index] = url;
     _enabled = index;
+  }
 
+  void notify() {
     SharedPreferences.getInstance().then(
       (instance) => instance.setStringList("urls", _urls),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:owl/gradients.dart';
 
 import 'package:provider/provider.dart';
 
@@ -27,20 +28,32 @@ class UrlButton extends StatelessWidget {
       0,
     );
 
+    var gradient = owlGradient;
+    var iconColor = Colors.black;
+    if (leftHanded &&
+        id != Provider.of<UrlModel>(context, listen: false).enabled) {
+      gradient = toSurfaceGradient(owlGradient);
+      iconColor = Colors.white70;
+    }
+
     return Padding(
       padding: leftHanded ? leftPadding : rightPadding,
       child: GradientButton(
         borderRadius: 23,
         height: 46,
         width: 46,
+        gradient: gradient,
         padding: const EdgeInsets.all(0),
         onPressed: () {
           Provider.of<UrlModel>(context, listen: false).set(id, name);
           Navigator.of(context).pop();
         },
-        child: const Icon(
+        onLongPress: () {
+          Provider.of<UrlModel>(context, listen: false).remove(id);
+        },
+        child: Icon(
           Icons.link,
-          color: Colors.black,
+          color: iconColor,
         ),
       ),
     );

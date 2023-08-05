@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -39,37 +41,74 @@ class TabSelector extends StatelessWidget {
   }
 }
 
+Widget _proxyDecorator(Widget child, int index, Animation<double> animation) {
+  return AnimatedBuilder(
+    animation: animation,
+    builder: (BuildContext context, Widget? child) {
+      final double animValue = Curves.easeInOut.transform(animation.value);
+      final double elevation = lerpDouble(0, 6, animValue)!;
+      return Material(
+        elevation: elevation,
+        color: Colors.transparent,
+        shadowColor: Colors.transparent,
+        child: child,
+      );
+    },
+    child: child,
+  );
+}
+
 Future<Widget> loadUrls(BuildContext context) async {
   return ScrollConfiguration(
     behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-    child: CustomScrollView(
-      key: const PageStorageKey("Tab Selector"),
-      controller: ScrollController(initialScrollOffset: 200),
-      slivers: <Widget>[
-        SliverPadding(
-          padding: EdgeInsets.fromLTRB(
-            0,
-            200,
-            0,
-            MediaQuery.of(context).size.height - 92.5,
-          ),
-          sliver: Consumer<UrlModel>(
-            builder: (context, urls, child) {
-              List<Widget> items = [];
+    child: Consumer<UrlModel>(
+      builder: (context, urls, child) {
+        List<Widget> items = [];
 
-              int i = 0;
-              for (var url in urls.list) {
-                items.add(Item(name: url, id: i));
-                i++;
-              }
+        int i = 0;
+        for (var url in urls.list) {
+          items.add(Item(key: Key("$i"), name: url, id: i));
+          i++;
+        }
 
-              items.add(AddButton(id: i));
+        return Column(
+          children: [
+            Flexible(
+              child: ReorderableListView(
+                shrinkWrap: true,
+                proxyDecorator: _proxyDecorator,
+                children: items,
+                onReorder: (int start, int current) {
+                  if (start < current) {
+                    int end = current - 1;
+                    String startItem = urls.list[start];
+                    int i = 0;
+                    int local = start;
 
-              return SliverList.list(children: items);
-            },
-          ),
-        ),
-      ],
+                    do {
+                      urls.setInternal(local, urls.list[++local]);
+                      i++;
+                    } while (i < end - start);
+
+                    urls.setInternal(end, startItem);
+                    urls.notify();
+                  } else if (start > current) {
+                    String startItem = urls.list[start];
+
+                    for (int i = start; i > current; i--) {
+                      urls.setInternal(i, urls.list[i - 1]);
+                    }
+
+                    urls.setInternal(current, startItem);
+                    urls.notify();
+                  }
+                },
+              ),
+            ),
+            AddButton(id: urls.number),
+          ],
+        );
+      },
     ),
   );
 }

@@ -20,15 +20,16 @@ class AddButtonState extends State<AddButton> {
   @override
   Widget build(BuildContext context) {
     if (_pressed) {
+      _pressed = false;
       return Item(name: "", id: widget.id, autofocus: true);
     }
 
-    final double padding = (MediaQuery.of(context).size.width / 2) - 50;
-
     return Padding(
-      padding: EdgeInsets.fromLTRB(padding, 25, padding, 0),
+      padding: const EdgeInsets.only(top: 25),
       child: GradientButton(
-        diameter: 50,
+        borderRadius: 25,
+        height: 50,
+        width: 80,
         onPressed: () => setState(() => _pressed = true),
         onLongPress: () {
           Provider.of<UrlModel>(context, listen: false).toggleLeftHanded();
