@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:google_fonts/google_fonts.dart';
-
 import 'package:owl/gradient_button.dart';
 import 'package:owl/item.dart';
 
@@ -22,18 +20,16 @@ class AddButtonState extends State<AddButton> {
       return Item(name: "", id: widget.id, autofocus: true);
     }
 
+    final double padding = (MediaQuery.of(context).size.width / 2) - 50;
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(60, 25, 60, 0),
+      padding: EdgeInsets.fromLTRB(padding, 25, padding, 0),
       child: GradientButton(
-        borderRadius: 23,
-        height: 46,
+        diameter: 50,
         onPressed: () => setState(() => _pressed = true),
-        child: Text(
-          "Add",
-          style: GoogleFonts.workSans(
-            fontSize: 14 * MediaQuery.of(context).textScaleFactor * 1.1,
-            textStyle: const TextStyle(color: Colors.white),
-          ),
+        child: const Icon(
+          Icons.add,
+          color: Colors.black,
         ),
       ),
     );

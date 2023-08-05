@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:owl/add_button.dart';
 import 'package:provider/provider.dart';
 
-import 'package:owl/gradient_button.dart';
 import 'package:owl/gradients.dart';
 import 'package:owl/url_model.dart';
 import 'package:owl/item.dart';
@@ -24,25 +23,15 @@ class TabSelector extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: FutureBuilder(
-                  future: loadUrls(context),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return snapshot.data!;
-                    }
+          child: FutureBuilder(
+            future: loadUrls(context),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data!;
+              }
 
-                    return const SizedBox();
-                  },
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(20),
-                child: GradientBackButton(),
-              ),
-            ],
+              return const SizedBox();
+            },
           ),
         ),
       ),
@@ -61,7 +50,7 @@ Future<Widget> loadUrls(BuildContext context) async {
             0,
             0,
             0,
-            MediaQuery.of(context).size.height - 70,
+            MediaQuery.of(context).size.height - 92.5,
           ),
           sliver: Consumer<UrlModel>(
             builder: (context, urls, child) {
