@@ -36,29 +36,34 @@ class BrowserState extends State<Browser> {
             if (!urls.hasLoaded) return Container();
             if (!urlIsValid(urls)) return const TabSelector();
 
-            controller.loadRequest(Uri.parse(urls.current));
+            controller.currentUrl().then(
+              (controllerUrl) {
+                if ((controllerUrl ?? "") != urls.current) {
+                  controller.loadRequest(Uri.parse(urls.current));
+                }
+              },
+            );
+
             return child ?? Container();
           },
-          child: WebViewWidget(
-            controller: controller,
-            gestureRecognizers: {
-              Factory<VerticalDragGestureRecognizer>(
-                () => VerticalDragGestureRecognizer()
-                  ..onDown = (DragDownDetails dragDownDetails) {
-                    controller.getScrollPosition().then(
-                      (value) {
-                        var movement = dragDownDetails.globalPosition;
-                        if (value.dy == 0 && movement.dy > 100) {
-                          Navigator.push(
-                            context,
-                            SlideRightRoute(page: const TabSelector()),
-                          );
-                        }
-                      },
+          child: Listener(
+            behavior: HitTestBehavior.translucent,
+            onPointerMove: (details) {
+              controller.getScrollPosition().then(
+                (value) {
+                  double x = details.delta.dx;
+                  double y = details.delta.dy;
+
+                  if (value.dy == 0 && y > 5 && x < 2 && x > -2) {
+                    Navigator.push(
+                      context,
+                      SlideRightRoute(page: const TabSelector()),
                     );
-                  },
-              ),
+                  }
+                },
+              );
             },
+            child: WebViewWidget(controller: controller),
           ),
         ),
       ),
