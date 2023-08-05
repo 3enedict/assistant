@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:owl/gradients.dart';
 
 class CutoutContainer extends StatelessWidget {
-  const CutoutContainer({super.key});
+  final bool leftHanded;
+
+  const CutoutContainer({super.key, required this.leftHanded});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,7 @@ class CutoutContainer extends StatelessWidget {
       },
       blendMode: BlendMode.srcIn,
       child: CustomPaint(
-        painter: HolePainter(),
+        painter: HolePainter(leftHanded: leftHanded),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(33),
@@ -27,10 +29,29 @@ class CutoutContainer extends StatelessWidget {
 }
 
 class HolePainter extends CustomPainter {
+  final bool leftHanded;
+
+  HolePainter({required this.leftHanded});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
     paint.color = Colors.black87;
+
+    final leftCutout = Path()
+      ..addOval(Rect.fromCircle(
+        center: Offset(size.height / 2, size.height / 2),
+        radius: size.height / 2 - 3,
+      ))
+      ..close();
+
+    final rightCutout = Path()
+      ..addOval(Rect.fromCircle(
+        center: Offset(size.width - (size.height / 2), size.height / 2),
+        radius: size.height / 2 - 4,
+      ))
+      ..close();
+
     canvas.drawPath(
       Path.combine(
         PathOperation.difference,
@@ -42,12 +63,7 @@ class HolePainter extends CustomPainter {
             0,
             Radius.circular(size.height / 2),
           )),
-        Path()
-          ..addOval(Rect.fromCircle(
-            center: Offset(size.width - (size.height / 2), size.height / 2),
-            radius: size.height / 2 - 4,
-          ))
-          ..close(),
+        leftHanded ? leftCutout : rightCutout,
       ),
       paint,
     );

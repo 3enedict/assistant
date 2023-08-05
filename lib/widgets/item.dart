@@ -27,9 +27,20 @@ class Item extends StatelessWidget {
         builder: (context, urls, child) {
           return Stack(
             children: [
-              const CutoutContainer(),
-              CustomTextfield(name: name, id: id, autofocus: autofocus),
-              UrlButton(name: name, id: id),
+              CutoutContainer(
+                leftHanded: urls.isleftHanded,
+              ),
+              CustomTextfield(
+                name: name,
+                id: id,
+                autofocus: autofocus,
+                leftHanded: urls.isleftHanded,
+              ),
+              UrlButton(
+                name: name,
+                id: id,
+                leftHanded: urls.isleftHanded,
+              ),
             ],
           );
         },

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import 'package:owl/widgets/buttons/gradient.dart';
 import 'package:owl/widgets/item.dart';
+import 'package:owl/url_model.dart';
 
 class AddButton extends StatefulWidget {
   final int id;
@@ -27,6 +30,9 @@ class AddButtonState extends State<AddButton> {
       child: GradientButton(
         diameter: 50,
         onPressed: () => setState(() => _pressed = true),
+        onLongPress: () {
+          Provider.of<UrlModel>(context, listen: false).toggleLeftHanded();
+        },
         child: const Icon(
           Icons.add,
           color: Colors.black,

@@ -3,16 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UrlModel extends ChangeNotifier {
+  bool _hasLoaded = false;
   List<String> _urls = [];
   int _enabled = 0;
 
-  bool _hasLoaded = false;
+  //This doesn't really have much to do with urls changes how the ui looks
+  bool _leftHanded = true;
 
   Future<void> load() async {
     SharedPreferences.getInstance().then(
       (instance) {
         _urls = instance.getStringList("urls") ?? [];
         _hasLoaded = true;
+
+        _leftHanded = instance.getBool("leftHanded") ?? true;
 
         notifyListeners();
       },
@@ -37,4 +41,14 @@ class UrlModel extends ChangeNotifier {
   int get number => _urls.length;
   bool get isEmpty => _urls.isEmpty;
   bool get hasLoaded => _hasLoaded;
+
+  bool get isleftHanded => _leftHanded;
+  void toggleLeftHanded() {
+    _leftHanded = !_leftHanded;
+    SharedPreferences.getInstance().then(
+      (instance) => instance.setBool("leftHanded", _leftHanded),
+    );
+
+    notifyListeners();
+  }
 }
