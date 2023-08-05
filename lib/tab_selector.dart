@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:google_fonts/google_fonts.dart';
+import 'package:owl/add_button.dart';
 import 'package:provider/provider.dart';
 
 import 'package:owl/gradient_button.dart';
@@ -73,32 +73,9 @@ Future<Widget> loadUrls(BuildContext context) async {
                 i++;
               }
 
-              items.add(
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                  child: GradientButton(
-                    borderRadius: 33,
-                    height: 66,
-                    onPressed: () => urls.set(urls.number, ""),
-                    gradient: toSurfaceGradient(owlGradient),
-                    child: Text(
-                      "Add",
-                      style: GoogleFonts.workSans(
-                        textStyle: const TextStyle(color: Colors.white70),
-                      ),
-                    ),
-                  ),
-                ),
-              );
+              items.add(AddButton(id: i));
 
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return items[index];
-                  },
-                  childCount: items.length,
-                ),
-              );
+              return SliverList.list(children: items);
             },
           ),
         ),

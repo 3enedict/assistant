@@ -7,9 +7,12 @@ class UrlModel extends ChangeNotifier {
   int _enabled = 0;
 
   Future<void> load() async {
-    var instance = await SharedPreferences.getInstance();
-
-    _urls = instance.getStringList("urls") ?? [];
+    SharedPreferences.getInstance().then(
+      (instance) {
+        _urls = instance.getStringList("urls") ?? [];
+        notifyListeners();
+      },
+    );
   }
 
   void set(int index, String url) {
@@ -28,4 +31,5 @@ class UrlModel extends ChangeNotifier {
   String get current => _urls.elementAtOrNull(_enabled) ?? "";
   int get enabled => _enabled;
   int get number => _urls.length;
+  bool get isEmpty => _urls.isEmpty;
 }

@@ -7,11 +7,13 @@ import 'package:provider/provider.dart';
 class Item extends StatelessWidget {
   final String name;
   final int id;
+  final bool autofocus;
 
   const Item({
     super.key,
     required this.name,
     required this.id,
+    this.autofocus = false,
   });
 
   @override
@@ -39,9 +41,10 @@ class Item extends StatelessWidget {
                 ),
                 Expanded(
                   child: TextField(
-                    keyboardType: TextInputType.url,
-                    controller: TextEditingController(text: name),
                     decoration: const InputDecoration(border: InputBorder.none),
+                    controller: TextEditingController(text: name),
+                    keyboardType: TextInputType.url,
+                    autofocus: autofocus,
                     expands: false,
                     onSubmitted: (url) => urls.set(id, url),
                   ),

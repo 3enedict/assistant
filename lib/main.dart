@@ -8,14 +8,16 @@ import 'package:provider/provider.dart';
 import 'package:owl/tab_selector.dart';
 import 'package:owl/url_model.dart';
 
-const defaultUrl = "http://192.168.1.2:8123";
-
 void main() {
   Paint.enableDithering = true;
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => UrlModel(),
+      create: (context) {
+        var model = UrlModel();
+        model.load();
+        return model;
+      },
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Owl',
@@ -35,7 +37,6 @@ class Owl extends StatefulWidget {
 
 class OwlState extends State<Owl> {
   late final WebViewController controller;
-  bool _loaded = false;
 
   @override
   void initState() {
@@ -47,19 +48,17 @@ class OwlState extends State<Owl> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_loaded) {
-      var model = Provider.of<UrlModel>(context, listen: false);
-      model.load().then((x) => setState(() => _loaded = true));
-      return Container();
-    }
-
     return Scaffold(
       body: SafeArea(
         child: Consumer<UrlModel>(
           builder: (context, urls, child) {
+            if (urls.isEmpty) return const TabSelector();
+
             String url = urls.current;
             if (url != "" && Uri.tryParse(url) != null) {
               controller.loadRequest(Uri.parse(url));
+            } else {
+              return const TabSelector();
             }
 
             return child ?? Container();
