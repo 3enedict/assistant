@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:owl/gradient_button.dart';
-import 'package:owl/item.dart';
+import 'package:owl/widgets/buttons/gradient.dart';
+import 'package:owl/widgets/item.dart';
 
 class AddButton extends StatefulWidget {
   final int id;

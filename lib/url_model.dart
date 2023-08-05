@@ -6,10 +6,14 @@ class UrlModel extends ChangeNotifier {
   List<String> _urls = [];
   int _enabled = 0;
 
+  bool _hasLoaded = false;
+
   Future<void> load() async {
     SharedPreferences.getInstance().then(
       (instance) {
         _urls = instance.getStringList("urls") ?? [];
+        _hasLoaded = true;
+
         notifyListeners();
       },
     );
@@ -32,4 +36,5 @@ class UrlModel extends ChangeNotifier {
   int get enabled => _enabled;
   int get number => _urls.length;
   bool get isEmpty => _urls.isEmpty;
+  bool get hasLoaded => _hasLoaded;
 }
