@@ -45,12 +45,12 @@ class CustomTextfield extends StatelessWidget {
     ];
 
     final rightConfiguration = [
-      const SizedBox(width: 25),
+      const SizedBox(width: 20),
       const Icon(
-        FontAwesomeIcons.gripVertical,
+        FontAwesomeIcons.gripLinesVertical,
         color: Colors.white70,
       ),
-      const SizedBox(width: 10),
+      const SizedBox(width: 12),
       textfield,
       const SizedBox(width: 66 + 10),
     ];

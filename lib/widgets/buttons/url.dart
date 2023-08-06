@@ -30,8 +30,7 @@ class UrlButton extends StatelessWidget {
 
     var gradient = owlGradient;
     var iconColor = Colors.black;
-    if (leftHanded &&
-        id != Provider.of<UrlModel>(context, listen: false).enabled) {
+    if (id != Provider.of<UrlModel>(context, listen: false).enabled) {
       gradient = toSurfaceGradient(owlGradient);
       iconColor = Colors.white70;
     }
