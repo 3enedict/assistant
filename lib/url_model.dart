@@ -30,7 +30,8 @@ class UrlModel extends ChangeNotifier {
 
   void remove(int index) {
     _urls.removeAt(index);
-    _enabled = 0;
+    _enabled = _enabled - 1;
+    if (_enabled < 0) _enabled = 0;
 
     notify();
   }
