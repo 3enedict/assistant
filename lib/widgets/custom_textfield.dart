@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:owl/gradients.dart';
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:owl/url_model.dart';
@@ -36,23 +36,21 @@ class CustomTextfield extends StatelessWidget {
     final leftConfiguration = [
       const SizedBox(width: 66 + 10),
       textfield,
+      const SizedBox(width: 10),
+      const Icon(
+        FontAwesomeIcons.gripVertical,
+        color: Colors.white70,
+      ),
       const SizedBox(width: 25),
     ];
 
     final rightConfiguration = [
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(13),
-          gradient: LinearGradient(
-            colors: id == Provider.of<UrlModel>(context, listen: false).enabled
-                ? owlGradient
-                : toBackgroundGradientWithReducedColorChange(owlGradient),
-          ),
-        ),
-        margin: const EdgeInsets.fromLTRB(20, 0, 14, 0),
-        height: 26,
-        width: 26,
+      const SizedBox(width: 25),
+      const Icon(
+        FontAwesomeIcons.gripVertical,
+        color: Colors.white70,
       ),
+      const SizedBox(width: 10),
       textfield,
       const SizedBox(width: 66 + 10),
     ];

@@ -13,6 +13,7 @@ dependencies:
   shared_preferences:
   google_fonts: ^5.1.0
   provider: ^6.0.5
+  font_awesome_flutter: ^10.5.0
 
 dev_dependencies:
   flutter_test:
