@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:owl/widgets/buttons/add.dart';
-import 'package:owl/widgets/item.dart';
 import 'package:owl/url_model.dart';
 import 'package:owl/gradients.dart';
 
@@ -14,6 +13,8 @@ class TabSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var controller = ScrollController();
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -24,16 +25,33 @@ class TabSelector extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
-          child: FutureBuilder(
-            future: loadUrls(context),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return snapshot.data!;
-              }
+          child: Listener(
+            behavior: HitTestBehavior.translucent,
+            onPointerMove: (details) {
+              var pos = controller.position;
+              double x = details.delta.dx;
+              double y = details.delta.dy;
 
-              return const SizedBox();
+              if (pos.atEdge &&
+                  pos.pixels == pos.maxScrollExtent &&
+                  y < -20 &&
+                  x < 2 &&
+                  x > -2) {
+                Navigator.of(context).pop();
+              }
             },
+            child: FutureBuilder(
+              future: loadUrls(context, controller),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!;
+                }
+
+                return const SizedBox();
+              },
+            ),
           ),
         ),
       ),
@@ -55,46 +73,74 @@ Widget _proxyDecorator(Widget child, int index, Animation<double> animation) {
   );
 }
 
-Future<Widget> loadUrls(BuildContext context) async {
+Future<Widget> loadUrls(
+  BuildContext context,
+  ScrollController controller,
+) async {
   return ScrollConfiguration(
     behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
     child: Consumer<UrlModel>(
       builder: (context, urls, child) {
-        return Column(
+        return Stack(
           children: [
-            Flexible(
-              child: ReorderableListView(
-                shrinkWrap: true,
-                proxyDecorator: _proxyDecorator,
-                children: urls.items,
-                onReorder: (int start, int current) {
-                  if (start < current) {
-                    int end = current - 1;
-                    String startItem = urls.list[start];
-                    int i = 0;
-                    int local = start;
+            Column(
+              children: [
+                Flexible(
+                  child: ReorderableListView(
+                    shrinkWrap: true,
+                    proxyDecorator: _proxyDecorator,
+                    scrollController: controller,
+                    children: urls.items,
+                    onReorder: (int start, int current) {
+                      final enabledName = urls.list[urls.enabled];
 
-                    do {
-                      urls.setInternal(local, urls.list[++local]);
-                      i++;
-                    } while (i < end - start);
+                      if (start < current) {
+                        int end = current - 1;
+                        String startItem = urls.list[start];
+                        int i = 0;
+                        int local = start;
 
-                    urls.setInternal(end, startItem);
-                    urls.notify();
-                  } else if (start > current) {
-                    String startItem = urls.list[start];
+                        do {
+                          urls.setInternal(local, urls.list[++local]);
+                          i++;
+                        } while (i < end - start);
 
-                    for (int i = start; i > current; i--) {
-                      urls.setInternal(i, urls.list[i - 1]);
-                    }
+                        urls.setInternal(end, startItem);
+                      } else if (start > current) {
+                        String startItem = urls.list[start];
 
-                    urls.setInternal(current, startItem);
-                    urls.notify();
-                  }
-                },
-              ),
+                        for (int i = start; i > current; i--) {
+                          urls.setInternal(i, urls.list[i - 1]);
+                        }
+
+                        urls.setInternal(current, startItem);
+                      }
+
+                      urls.setEnabled(urls.list.indexOf(enabledName));
+                      urls.notify();
+                    },
+                  ),
+                ),
+                AddButton(
+                  id: urls.number,
+                  onPressed: () =>
+                      controller.jumpTo(controller.position.maxScrollExtent),
+                ),
+                const SizedBox(height: 60),
+              ],
             ),
-            AddButton(id: urls.number),
+            const Column(
+              children: [
+                Expanded(child: SizedBox()),
+                Center(
+                  child: Icon(
+                    Icons.expand_more,
+                    color: Colors.white70,
+                  ),
+                ),
+                SizedBox(height: 20),
+              ],
+            )
           ],
         );
       },

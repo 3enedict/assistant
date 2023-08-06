@@ -40,6 +40,7 @@ class CustomTextfield extends StatelessWidget {
       const Icon(
         FontAwesomeIcons.gripVertical,
         color: Colors.white70,
+        size: 19,
       ),
       const SizedBox(width: 25),
     ];
@@ -49,6 +50,7 @@ class CustomTextfield extends StatelessWidget {
       const Icon(
         FontAwesomeIcons.gripLinesVertical,
         color: Colors.white70,
+        size: 19,
       ),
       const SizedBox(width: 12),
       textfield,

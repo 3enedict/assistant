@@ -42,7 +42,6 @@ class Item extends StatelessWidget {
                   leftHanded: urls.isleftHanded,
                 ),
                 UrlButton(
-                  name: name,
                   id: id,
                   leftHanded: urls.isleftHanded,
                 ),

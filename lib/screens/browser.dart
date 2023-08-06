@@ -54,7 +54,7 @@ class BrowserState extends State<Browser> {
                   double x = details.delta.dx;
                   double y = details.delta.dy;
 
-                  if (value.dy == 0 && y > 5 && x < 2 && x > -2) {
+                  if (value.dy == 0 && y > 20 && x < 2 && x > -2) {
                     Navigator.push(
                       context,
                       SlideRightRoute(page: const TabSelector()),

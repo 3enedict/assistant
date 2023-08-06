@@ -120,6 +120,11 @@ class UrlModel extends ChangeNotifier {
   bool get isEmpty => _urls.isEmpty;
   bool get hasLoaded => _hasLoaded;
 
+  void setEnabled(int id) {
+    _enabled = id;
+    notifyListeners();
+  }
+
   bool get isleftHanded => _leftHanded;
   void toggleLeftHanded() {
     _leftHanded = !_leftHanded;

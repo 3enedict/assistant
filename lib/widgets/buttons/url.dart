@@ -7,13 +7,11 @@ import 'package:owl/widgets/buttons/gradient.dart';
 import 'package:owl/url_model.dart';
 
 class UrlButton extends StatelessWidget {
-  final String name;
   final int id;
   final bool leftHanded;
 
   const UrlButton({
     super.key,
-    required this.name,
     required this.id,
     required this.leftHanded,
   });
@@ -44,8 +42,7 @@ class UrlButton extends StatelessWidget {
         gradient: gradient,
         padding: const EdgeInsets.all(0),
         onPressed: () {
-          Provider.of<UrlModel>(context, listen: false).set(id, name);
-          Navigator.of(context).pop();
+          Provider.of<UrlModel>(context, listen: false).setEnabled(id);
         },
         child: Icon(
           Icons.link,

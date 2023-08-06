@@ -8,7 +8,13 @@ import 'package:owl/url_model.dart';
 
 class AddButton extends StatefulWidget {
   final int id;
-  const AddButton({super.key, required this.id});
+  final VoidCallback onPressed;
+
+  const AddButton({
+    super.key,
+    required this.id,
+    required this.onPressed,
+  });
 
   @override
   AddButtonState createState() => AddButtonState();
@@ -25,6 +31,7 @@ class AddButtonState extends State<AddButton> {
         width: 80,
         onPressed: () {
           Provider.of<UrlModel>(context, listen: false).add();
+          widget.onPressed();
         },
         onLongPress: () {
           Provider.of<UrlModel>(context, listen: false).toggleLeftHanded();
