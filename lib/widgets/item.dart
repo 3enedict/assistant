@@ -7,18 +7,6 @@ import 'package:owl/widgets/cutout_container.dart';
 import 'package:owl/widgets/buttons/url.dart';
 import 'package:owl/url_model.dart';
 
-class ItemData {
-  final String name;
-  final int id;
-  final bool autofocus;
-
-  const ItemData({
-    required this.name,
-    required this.id,
-    this.autofocus = false,
-  });
-}
-
 class Item extends StatefulWidget {
   final String name;
   final int id;
@@ -35,21 +23,23 @@ class Item extends StatefulWidget {
   ItemState createState() => ItemState();
 }
 
-class ItemState extends State<Item> with SingleTickerProviderStateMixin {
-  bool _removed = false;
+class ItemState extends State<Item> {
+  bool _alreadyRemoved = false;
 
   @override
   Widget build(BuildContext context) {
-    if (_removed) return const SizedBox(height: 86);
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Dismissible(
-        key: UniqueKey(),
-        resizeDuration: null,
-        onDismissed: (direction) {
-          setState(() => _removed = true);
-          Provider.of<UrlModel>(context, listen: false).remove(widget.id);
+      child: Listener(
+        behavior: HitTestBehavior.translucent,
+        onPointerMove: (details) {
+          double x = details.delta.dx;
+          double y = details.delta.dy;
+
+          if (x > 10 || x < -10 && y < 2 && y > -2 && !_alreadyRemoved) {
+            setState(() => _alreadyRemoved = true);
+            Provider.of<UrlModel>(context, listen: false).remove(widget.id);
+          }
         },
         child: Consumer<UrlModel>(
           builder: (context, urls, child) {

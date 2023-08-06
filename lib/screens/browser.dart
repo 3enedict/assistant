@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
@@ -32,7 +34,7 @@ class BrowserState extends State<Browser> {
         child: Consumer<UrlModel>(
           builder: (context, urls, child) {
             if (!urls.hasLoaded) return Container();
-            if (!urlIsValid(urls)) return TabSelector();
+            if (!urlIsValid(urls)) return const TabSelector();
 
             controller.currentUrl().then(
               (controllerUrl) {
@@ -55,7 +57,7 @@ class BrowserState extends State<Browser> {
                   if (value.dy == 0 && y > 5 && x < 2 && x > -2) {
                     Navigator.push(
                       context,
-                      SlideRightRoute(page: TabSelector()),
+                      SlideRightRoute(page: const TabSelector()),
                     );
                   }
                 },

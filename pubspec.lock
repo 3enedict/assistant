@@ -89,14 +89,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-  diffutil_dart:
-    dependency: transitive
-    description:
-      name: diffutil_dart
-      sha256: e0297e4600b9797edff228ed60f4169a778ea357691ec98408fa3b72994c7d06
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -168,14 +160,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
-  great_list_view:
-    dependency: "direct main"
-    description:
-      name: great_list_view
-      sha256: "4e528745d65c95d731b7c90af620822895233943ff531ad7a5d2b5a43e187b12"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.3"
   http:
     dependency: transitive
     description:
@@ -292,10 +276,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_linux
-      sha256: ffbb8cc9ed2c9ec0e4b7a541e56fd79b138e8f47d2fb86815f15358a349b3b57
+      sha256: ba2b77f0c52a33db09fc8caf85b12df691bf28d983e84cf87ff6d693cfa007b3
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.11"
+    version: "2.2.0"
   path_provider_platform_interface:
     dependency: transitive
     description:
@@ -308,10 +292,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_windows
-      sha256: "1cb68ba4cd3a795033de62ba1b7b4564dace301f952de6bfb3cd91b202b6ee96"
+      sha256: ee0e0d164516b90ae1f970bdf29f726f1aa730d7cfc449ecc74c495378b705da
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.7"
+    version: "2.2.0"
   petitparser:
     dependency: transitive
     description:
@@ -517,14 +501,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.6"
-  worker_manager:
-    dependency: transitive
-    description:
-      name: worker_manager
-      sha256: "42501e49ee0acad9eeda562984e3dcfe6fe3d26f2d8dc410bd76308a86447eb5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.3"
   xdg_directories:
     dependency: transitive
     description:
