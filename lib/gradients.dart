@@ -5,6 +5,11 @@ const owlGradient = [
   Color(0xFF3aaada),
 ];
 
+const errorGradient = [
+  Color(0xFFFF4B2B),
+  Color(0xFFFF416C),
+];
+
 List<Color> toBackgroundGradient(List<Color> gradient) {
   return [
     toBackgroundColor(gradient[0], 0.15, 0.2),

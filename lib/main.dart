@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:wakelock/wakelock.dart';
 import 'package:provider/provider.dart';
 
 import 'package:owl/screens/browser.dart';
@@ -7,6 +8,7 @@ import 'package:owl/url_model.dart';
 
 void main() {
   Paint.enableDithering = true;
+  Wakelock.enable();
 
   runApp(
     ChangeNotifierProvider(

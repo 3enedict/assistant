@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:owl/screens/tab_selector.dart';
 import 'package:owl/widgets/slide_route.dart';
 import 'package:owl/url_model.dart';
+import 'package:owl/gradients.dart';
 
 class Browser extends StatefulWidget {
   const Browser({super.key});
@@ -33,8 +34,36 @@ class BrowserState extends State<Browser> {
       body: SafeArea(
         child: Consumer<UrlModel>(
           builder: (context, urls, child) {
-            if (!urls.hasLoaded) return Container();
-            if (!urlIsValid(urls)) return const TabSelector();
+            if (!urls.hasLoaded || !urlIsValid(urls) || child == null) {
+              return Listener(
+                behavior: HitTestBehavior.translucent,
+                onPointerMove: (details) {
+                  controller.getScrollPosition().then(
+                    (value) {
+                      double x = details.delta.dx;
+                      double y = details.delta.dy;
+
+                      if (value.dy == 0 && y > 20 && x < 2 && x > -2) {
+                        Navigator.push(
+                          context,
+                          SlideRightRoute(page: const TabSelector()),
+                        );
+                      }
+                    },
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: toBackgroundGradientWithReducedColorChange(
+                          owlGradient),
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                ),
+              );
+            }
 
             controller.currentUrl().then(
               (controllerUrl) {
@@ -44,7 +73,7 @@ class BrowserState extends State<Browser> {
               },
             );
 
-            return child ?? Container();
+            return child;
           },
           child: Listener(
             behavior: HitTestBehavior.translucent,
@@ -75,7 +104,7 @@ bool urlIsValid(UrlModel urls) {
   if (urls.isEmpty) return false;
 
   String url = urls.current;
-  if (url != "" && Uri.tryParse(url) != null) return true;
+  if (url != "" && Uri.parse(url).isAbsolute) return true;
 
   return false;
 }
