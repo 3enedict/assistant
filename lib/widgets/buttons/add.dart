@@ -15,22 +15,17 @@ class AddButton extends StatefulWidget {
 }
 
 class AddButtonState extends State<AddButton> {
-  bool _pressed = false;
-
   @override
   Widget build(BuildContext context) {
-    if (_pressed) {
-      _pressed = false;
-      return Item(name: "", id: widget.id, autofocus: true);
-    }
-
     return Padding(
       padding: const EdgeInsets.only(top: 25),
       child: GradientButton(
         borderRadius: 25,
         height: 50,
         width: 80,
-        onPressed: () => setState(() => _pressed = true),
+        onPressed: () {
+          Provider.of<UrlModel>(context, listen: false).add();
+        },
         onLongPress: () {
           Provider.of<UrlModel>(context, listen: false).toggleLeftHanded();
         },

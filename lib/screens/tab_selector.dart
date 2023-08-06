@@ -60,21 +60,13 @@ Future<Widget> loadUrls(BuildContext context) async {
     behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
     child: Consumer<UrlModel>(
       builder: (context, urls, child) {
-        List<Widget> items = [];
-
-        int i = 0;
-        for (var url in urls.list) {
-          items.add(Item(key: Key("$i"), name: url, id: i));
-          i++;
-        }
-
         return Column(
           children: [
             Flexible(
               child: ReorderableListView(
                 shrinkWrap: true,
                 proxyDecorator: _proxyDecorator,
-                children: items,
+                children: urls.items,
                 onReorder: (int start, int current) {
                   if (start < current) {
                     int end = current - 1;
