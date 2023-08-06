@@ -21,11 +21,16 @@ class AddButtonState extends State<AddButton> {
   Widget build(BuildContext context) {
     if (_pressed) {
       _pressed = false;
-      return Item(name: "", id: widget.id, autofocus: true);
+
+      return Item(
+        name: "",
+        id: widget.id,
+        autofocus: true,
+      );
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 25),
+      padding: const EdgeInsets.only(top: 15),
       child: GradientButton(
         borderRadius: 25,
         height: 50,

@@ -7,7 +7,19 @@ import 'package:owl/widgets/cutout_container.dart';
 import 'package:owl/widgets/buttons/url.dart';
 import 'package:owl/url_model.dart';
 
-class Item extends StatefulWidget {
+class ItemData {
+  final String name;
+  final int id;
+  final bool autofocus;
+
+  const ItemData({
+    required this.name,
+    required this.id,
+    this.autofocus = false,
+  });
+}
+
+class Item extends StatelessWidget {
   final String name;
   final int id;
   final bool autofocus;
@@ -20,25 +32,17 @@ class Item extends StatefulWidget {
   });
 
   @override
-  ItemState createState() => ItemState();
-}
-
-class ItemState extends State<Item> {
-  bool _alreadyRemoved = false;
-
-  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Listener(
         behavior: HitTestBehavior.translucent,
         onPointerMove: (details) {
           double x = details.delta.dx;
           double y = details.delta.dy;
 
-          if (x > 10 || x < -10 && y < 2 && y > -2 && !_alreadyRemoved) {
-            setState(() => _alreadyRemoved = true);
-            Provider.of<UrlModel>(context, listen: false).remove(widget.id);
+          if ((x > 10 || x < -10) && y < 0.1 && y > -0.1) {
+            Provider.of<UrlModel>(context, listen: false).remove(id);
           }
         },
         child: Consumer<UrlModel>(
@@ -49,14 +53,14 @@ class ItemState extends State<Item> {
                   leftHanded: urls.isleftHanded,
                 ),
                 CustomTextfield(
-                  name: widget.name,
-                  id: widget.id,
-                  autofocus: widget.autofocus,
+                  name: name,
+                  id: id,
+                  autofocus: autofocus,
                   leftHanded: urls.isleftHanded,
                 ),
                 UrlButton(
-                  name: widget.name,
-                  id: widget.id,
+                  name: name,
+                  id: id,
                   leftHanded: urls.isleftHanded,
                 ),
               ],

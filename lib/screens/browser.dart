@@ -18,6 +18,7 @@ class Browser extends StatefulWidget {
 
 class BrowserState extends State<Browser> {
   late final WebViewController controller;
+  final selector = TabSelector();
 
   @override
   void initState() {
@@ -34,7 +35,7 @@ class BrowserState extends State<Browser> {
         child: Consumer<UrlModel>(
           builder: (context, urls, child) {
             if (!urls.hasLoaded) return Container();
-            if (!urlIsValid(urls)) return const TabSelector();
+            if (!urlIsValid(urls)) return selector;
 
             controller.currentUrl().then(
               (controllerUrl) {
@@ -57,7 +58,7 @@ class BrowserState extends State<Browser> {
                   if (value.dy == 0 && y > 5 && x < 2 && x > -2) {
                     Navigator.push(
                       context,
-                      SlideRightRoute(page: const TabSelector()),
+                      SlideRightRoute(page: selector),
                     );
                   }
                 },

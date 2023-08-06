@@ -28,8 +28,9 @@ class CustomTextfield extends StatelessWidget {
         keyboardType: TextInputType.url,
         autofocus: autofocus,
         expands: false,
-        onSubmitted: (url) =>
-            Provider.of<UrlModel>(context, listen: false).set(id, url),
+        onSubmitted: (url) {
+          Provider.of<UrlModel>(context, listen: false).set(id, url);
+        },
       ),
     );
 
