@@ -48,7 +48,7 @@ class CustomTextfield extends StatelessWidget {
     final rightConfiguration = [
       const SizedBox(width: 20),
       const Icon(
-        FontAwesomeIcons.gripLinesVertical,
+        FontAwesomeIcons.gripVertical,
         color: Colors.white70,
         size: 19,
       ),
