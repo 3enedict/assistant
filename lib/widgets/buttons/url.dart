@@ -47,9 +47,6 @@ class UrlButton extends StatelessWidget {
           Provider.of<UrlModel>(context, listen: false).set(id, name);
           Navigator.of(context).pop();
         },
-        onLongPress: () {
-          Provider.of<UrlModel>(context, listen: false).remove(id);
-        },
         child: Icon(
           Icons.link,
           color: iconColor,
