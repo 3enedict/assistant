@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:great_list_view/great_list_view.dart';
-import 'package:owl/widgets/cutout_container.dart';
 import 'package:provider/provider.dart';
 
 import 'package:owl/widgets/buttons/add.dart';
