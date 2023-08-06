@@ -30,7 +30,6 @@ class CustomTextfield extends StatelessWidget {
         expands: false,
         onSubmitted: (url) {
           Provider.of<UrlModel>(context, listen: false).set(id, url);
-          Provider.of<UrlModel>(context, listen: false).rebuildListView();
         },
       ),
     );

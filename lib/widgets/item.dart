@@ -40,12 +40,13 @@ class ItemState extends State<Item> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (_removed) return const SizedBox();
+    if (_removed) return const SizedBox(height: 86);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: Dismissible(
-        key: Key("dismissible ${widget.id}"),
+        key: UniqueKey(),
+        resizeDuration: null,
         onDismissed: (direction) {
           setState(() => _removed = true);
           Provider.of<UrlModel>(context, listen: false).remove(widget.id);

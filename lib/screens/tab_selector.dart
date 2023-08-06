@@ -25,6 +25,29 @@ class TabSelectorState extends State<TabSelector> {
 
   @override
   Widget build(BuildContext context) {
+    final urls = Provider.of<UrlModel>(context);
+
+    List<String> list = currentList.map((e) => e.name).toList();
+    if (listEquals(urls.list, list) == false) {
+      List<ItemData> items = [];
+
+      int i = 0;
+      for (var url in urls.list) {
+        items.add(
+          ItemData(
+            name: url,
+            id: i,
+            autofocus: url == "" && i == urls.number - 1,
+          ),
+        );
+        i++;
+      }
+
+      setState(() {
+        currentList = items;
+      });
+    }
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -36,64 +59,43 @@ class TabSelectorState extends State<TabSelector> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              Consumer<UrlModel>(
-                builder: (context, urls, child) {
-                  List<String> list = currentList.map((e) => e.name).toList();
-                  if (listEquals(urls.list, list) == false &&
-                      urls.listViewNeedsRebuilding) {
-                    List<ItemData> items = [];
+              Theme(
+                data: Theme.of(context).copyWith(
+                  canvasColor: Colors.transparent,
+                ),
+                child: Scrollbar(
+                  controller: widget.scrollController,
+                  child: AutomaticAnimatedListView<ItemData>(
+                    addAnimatedElevation: 0,
+                    list: currentList,
+                    comparator: AnimatedListDiffListComparator<ItemData>(
+                        sameItem: (a, b) => a.id == b.id,
+                        sameContent: (a, b) => a.name == b.name),
+                    itemBuilder: (context, item, data) => data.measuring
+                        ? const Padding(
+                            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                            child: CutoutContainer(leftHanded: true),
+                          )
+                        : Item(
+                            name: item.name,
+                            id: item.id,
+                            autofocus: item.autofocus,
+                          ),
+                    listController: widget.controller,
+                    addLongPressReorderable: true,
+                    reorderModel: AnimatedListReorderModel(
+                      onReorderStart: (index, dx, dy) => true,
+                      onReorderMove: (index, dropIndex) => true,
+                      onReorderComplete: (index, dropIndex, slot) {
+                        Provider.of<UrlModel>(context)
+                            .reorder(index, dropIndex);
 
-                    int i = 0;
-                    for (var url in urls.list) {
-                      items.add(ItemData(name: url, id: i));
-                      i++;
-                    }
-
-                    Future.delayed(Duration.zero, () async {
-                      setState(() {
-                        currentList = items;
-                        urls.listViewRebuilt();
-                      });
-                    });
-                  }
-
-                  return child ?? Container();
-                },
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    canvasColor: Colors.transparent,
-                  ),
-                  child: Scrollbar(
-                    controller: widget.scrollController,
-                    child: AutomaticAnimatedListView<ItemData>(
-                      addAnimatedElevation: 0,
-                      shrinkWrap: true,
-                      list: currentList,
-                      comparator: AnimatedListDiffListComparator<ItemData>(
-                          sameItem: (a, b) => a.id == b.id,
-                          sameContent: (a, b) => a.name == b.name),
-                      itemBuilder: (context, item, data) => data.measuring
-                          ? const Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: CutoutContainer(leftHanded: true),
-                            )
-                          : Item(name: item.name, id: item.id),
-                      listController: widget.controller,
-                      addLongPressReorderable: true,
-                      reorderModel: AnimatedListReorderModel(
-                        onReorderStart: (index, dx, dy) => true,
-                        onReorderMove: (index, dropIndex) => true,
-                        onReorderComplete: (index, dropIndex, slot) {
-                          Provider.of<UrlModel>(context)
-                              .reorder(index, dropIndex);
-
-                          return true;
-                        },
-                      ),
-                      scrollController: widget.scrollController,
+                        return true;
+                      },
                     ),
+                    scrollController: widget.scrollController,
                   ),
                 ),
               ),
