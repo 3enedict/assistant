@@ -19,7 +19,7 @@ class ItemData {
   });
 }
 
-class Item extends StatelessWidget {
+class Item extends StatefulWidget {
   final String name;
   final int id;
   final bool autofocus;
@@ -32,18 +32,23 @@ class Item extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Listener(
-        behavior: HitTestBehavior.translucent,
-        onPointerMove: (details) {
-          double x = details.delta.dx;
-          double y = details.delta.dy;
+  ItemState createState() => ItemState();
+}
 
-          if ((x > 10 || x < -10) && y < 0.1 && y > -0.1) {
-            Provider.of<UrlModel>(context, listen: false).remove(id);
-          }
+class ItemState extends State<Item> with SingleTickerProviderStateMixin {
+  bool _removed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_removed) return const SizedBox();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      child: Dismissible(
+        key: Key("dismissible ${widget.id}"),
+        onDismissed: (direction) {
+          setState(() => _removed = true);
+          Provider.of<UrlModel>(context, listen: false).remove(widget.id);
         },
         child: Consumer<UrlModel>(
           builder: (context, urls, child) {
@@ -53,14 +58,14 @@ class Item extends StatelessWidget {
                   leftHanded: urls.isleftHanded,
                 ),
                 CustomTextfield(
-                  name: name,
-                  id: id,
-                  autofocus: autofocus,
+                  name: widget.name,
+                  id: widget.id,
+                  autofocus: widget.autofocus,
                   leftHanded: urls.isleftHanded,
                 ),
                 UrlButton(
-                  name: name,
-                  id: id,
+                  name: widget.name,
+                  id: widget.id,
                   leftHanded: urls.isleftHanded,
                 ),
               ],

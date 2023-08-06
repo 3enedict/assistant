@@ -9,6 +9,7 @@ class UrlModel extends ChangeNotifier {
 
   //This doesn't really have much to do with urls changes how the ui looks
   bool _leftHanded = true;
+  bool _rebuildListView = true;
 
   Future<void> load() async {
     SharedPreferences.getInstance().then(
@@ -23,15 +24,18 @@ class UrlModel extends ChangeNotifier {
     );
   }
 
+  void reorder(int index, int dropIndex) {
+    _urls.insert(dropIndex, _urls.removeAt(index));
+    notify();
+  }
+
   void set(int index, String url) {
     setInternal(index, url);
     notify();
   }
 
   void remove(int index) {
-    _urls.removeAt(index);
-    _enabled = 0;
-
+    removeInternal(index);
     notify();
   }
 
@@ -39,6 +43,11 @@ class UrlModel extends ChangeNotifier {
     if (index > _urls.length - 1) _urls.add("");
     _urls[index] = url;
     _enabled = index;
+  }
+
+  void removeInternal(int index) {
+    _urls.removeAt(index);
+    _enabled = 0;
   }
 
   void notify() {
@@ -64,5 +73,12 @@ class UrlModel extends ChangeNotifier {
     );
 
     notifyListeners();
+  }
+
+  bool get listViewNeedsRebuilding => _rebuildListView;
+  void listViewRebuilt() => _rebuildListView = false;
+  void rebuildListView() {
+    _rebuildListView = true;
+    notify();
   }
 }

@@ -30,7 +30,7 @@ class AddButtonState extends State<AddButton> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 15),
+      padding: const EdgeInsets.only(top: 25),
       child: GradientButton(
         borderRadius: 25,
         height: 50,
@@ -38,6 +38,7 @@ class AddButtonState extends State<AddButton> {
         onPressed: () => setState(() => _pressed = true),
         onLongPress: () {
           Provider.of<UrlModel>(context, listen: false).toggleLeftHanded();
+          Provider.of<UrlModel>(context, listen: false).rebuildListView();
         },
         child: const Icon(
           Icons.add,
