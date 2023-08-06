@@ -58,23 +58,28 @@ class TabSelectorState extends State<TabSelector> {
 
                   return child ?? Container();
                 },
-                child: Scrollbar(
-                  controller: widget.scrollController,
-                  child: AutomaticAnimatedListView<ItemData>(
-                    shrinkWrap: true,
-                    list: currentList,
-                    comparator: AnimatedListDiffListComparator<ItemData>(
-                        sameItem: (a, b) => a.id == b.id,
-                        sameContent: (a, b) => a.name == b.name),
-                    itemBuilder: (context, item, data) => data.measuring
-                        ? Container(
-                            margin: const EdgeInsets.all(5), height: 100)
-                        : Item(name: item.name, id: item.id),
-                    listController: widget.controller,
-                    addLongPressReorderable: true,
-                    reorderModel:
-                        AutomaticAnimatedListReorderModel(currentList),
-                    scrollController: widget.scrollController,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    canvasColor: Colors.transparent,
+                  ),
+                  child: Scrollbar(
+                    controller: widget.scrollController,
+                    child: AutomaticAnimatedListView<ItemData>(
+                      shrinkWrap: true,
+                      list: currentList,
+                      comparator: AnimatedListDiffListComparator<ItemData>(
+                          sameItem: (a, b) => a.id == b.id,
+                          sameContent: (a, b) => a.name == b.name),
+                      itemBuilder: (context, item, data) => data.measuring
+                          ? Container(
+                              margin: const EdgeInsets.all(5), height: 100)
+                          : Item(name: item.name, id: item.id),
+                      listController: widget.controller,
+                      addLongPressReorderable: true,
+                      reorderModel:
+                          AutomaticAnimatedListReorderModel(currentList),
+                      scrollController: widget.scrollController,
+                    ),
                   ),
                 ),
               ),
