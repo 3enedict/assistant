@@ -1,9 +1,8 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
 
 import 'package:owl/screens/tab_selector.dart';
 import 'package:owl/widgets/slide_route.dart';
@@ -30,6 +29,8 @@ class BrowserState extends State<Browser> {
 
   @override
   Widget build(BuildContext context) {
+    Wakelock.enable();
+
     return Scaffold(
       body: SafeArea(
         child: Consumer<UrlModel>(
